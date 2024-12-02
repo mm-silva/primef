@@ -9,7 +9,7 @@ const register = async (req, res) => {
         // Criptografa a senha antes de armazená-la no banco de dados
         const hashedPassword = await bcrypt.hash(password, 10);
         // Cria um novo documento de usuário com as informações fornecidas
-        const user = new User({ username, password: hashedPassword, email, phone });
+        const user = new User({ username, password: hashedPassword, email, phone, permission: false });
         // Salva o novo usuário no banco de dados
         await user.save();
         // Responde com sucesso
@@ -24,8 +24,9 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { username, password } = req.body;
     try {
+        const email = username;
         // Busca o usuário no banco de dados pelo nome de usuário
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email });
         // Verifica se o usuário existe e se a senha fornecida é correta
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).send('Credenciais inválidas.');
