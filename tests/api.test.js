@@ -1,5 +1,6 @@
 const http = require('http');
 const https = require('https');
+const jwt = require('jsonwebtoken');
 
 const BASE_URL = 'http://localhost:5000';
 let token = '';
@@ -56,8 +57,8 @@ async function runTests() {
     // Teste de registro de usuário
     console.log('\nTestando registro de usuário...');
     const registerResponse = await makeRequest('POST', '/api/auth/register', {
-      username: "testuser",
-      email: "testuser@example.com",
+      username: "testduser",
+      email: "testusedr@example.com",
       phone: "123456",
       password: "123456"
     });
@@ -75,6 +76,9 @@ async function runTests() {
     token = loginData.token;
     console.log(`Token obtido: ${token}`);
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+console.log(decoded);
     // Teste de OPTIONS para subscrição de plano
     console.log('\nTestando OPTIONS para subscrição de plano...');
     const optionsResponse = await makeRequest('OPTIONS', '/api/plans/subscribe');
@@ -83,7 +87,7 @@ async function runTests() {
 
     // Teste de atualização de usuário
     console.log('\nTestando atualização de usuário...');
-    const updateResponse = await makeRequest('PUT', '/api/user/674c9dc56749db2a96c551b2', {
+    const updateResponse = await makeRequest('PUT', '/api/user/' + decoded.userId, {
       username: "updateduser",
       email: "updated@example.com",
       phone: "987654321",
@@ -96,7 +100,7 @@ async function runTests() {
 
     // Teste de obtenção de informações do usuário
     console.log('\nTestando obtenção de informações do usuário...');
-    const userInfoResponse = await makeRequest('GET', '/api/user/info?userId=674c9dc56749db2a96c551b2');
+    const userInfoResponse = await makeRequest('GET', '/api/user/info?userId=' + decoded.userId);
     console.log(`Status: ${userInfoResponse.statusCode}`);
     console.log(`Informações do usuário: ${userInfoResponse.body}`);
 
