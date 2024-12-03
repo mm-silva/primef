@@ -11,10 +11,10 @@ const checkAdmin = async (req, res, next) => {
 
     // Verificar e decodificar o token
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // 'JWT_SECRET' é a chave secreta do JWT
-    const user = await User.findById(decoded.id); // Encontrar o usuário no banco de dados
+    const user = await User.findById(decoded.userId); // Encontrar o usuário no banco de dados
 
     if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado.' });
+      return res.status(404).json({ message: 'Usuário não enscontrado.' });
     }
 
     // Verificar se o campo 'permission' do usuário é igual a 1 (admin)

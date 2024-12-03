@@ -20,7 +20,7 @@ const subscribe = async (req, res) => {
     try {
         // Busca o usuário pelo ID
         const user = await User.findById(userId);
-        if (!user) return res.status(404).send('Usuário não encontrado.');
+        if (!user) return res.status(404).send('Usuário não enxcontrado.');
 
         // Busca o plano pelo ID
         const plan = await Plan.findById(planId);
